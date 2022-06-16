@@ -7,8 +7,8 @@ object MAU {
     val spark = SparkSession
       .builder()
       .appName("DAU")
+      .config("spark.sql.broadcastTimeout", "36000")
       .config("spark.master", "local[4]")// 需设置spark.master为local[N]才能直接运行，N为并发数
-      .config("spark.sql.catalogImplementation", "odps")
       .getOrCreate()
 
     try{
