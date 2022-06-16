@@ -8,17 +8,12 @@ object MAU {
       .builder()
       .appName("DAU")
       .config("spark.master", "local[4]")// 需设置spark.master为local[N]才能直接运行，N为并发数
-      .config("spark.hadoop.odps.project.name", "graviti_bi")
-      .config("spark.hadoop.odps.access.id", "LTAI5tE3bzCSuJ2QY5dfGNa8")
-      .config("spark.hadoop.odps.access.key", "QCqKValsq6IzU2G7UvO8Cxr1vPoXsY")
-      .config("spark.hadoop.odps.end.point", "http://service.cn.maxcompute.aliyun.com/api")
       .config("spark.sql.catalogImplementation", "odps")
       .getOrCreate()
 
     try{
       //通过SparkSql查询表
-      val data = spark.sql("select year(insert_time), month(insert_time), count(distinct id) as mau " +
-        "from etl_user")
+      val data = spark.sql("select  concat(year(a.insert_time),month(a.insert_time)), count(distinct a.id) as MAU, count(distinct b.id) as MAU_sec, count(distinct b.id)/count(distinct a.id) as Monthly_retention from etl_user a left join etl_user b on a.id=b.id and ((year(b.insert_time)-year(a.insert_time))*12 + month(b.insert_time)-month(a.insert_time)) = 1 group by concat(year(a.insert_time),month(a.insert_time)) order by concat(year(a.insert_time),month(a.insert_time))")
       //展示查询数据
       data.show()
     }finally {
