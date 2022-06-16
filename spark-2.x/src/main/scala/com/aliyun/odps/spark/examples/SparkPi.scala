@@ -28,11 +28,6 @@ object SparkPi {
       .builder()
       .appName("SparkPi")
       .config("spark.master", "local[4]")
-      .config("spark.hadoop.odps.project.name", "****")
-      .config("spark.hadoop.odps.access.id", "****")
-      .config("spark.hadoop.odps.access.key", "****")
-      .config("spark.hadoop.odps.end.point", "http://service.cn.maxcompute.aliyun.com/api")
-      .config("spark.sql.catalogImplementation", "odps")
       .getOrCreate()
     val sc = spark.sparkContext
 
